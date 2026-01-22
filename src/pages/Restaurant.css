@@ -1,0 +1,268 @@
+/* Hero Section */
+.hero {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+
+.section-intro h2 {
+    font-size: 3.5rem;
+    color: white;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.section-intro p {
+    font-size: 1.3rem;
+    color: white;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+}
+/* First Section */
+.first-section {
+  background: white;
+}
+
+.section-intro {
+  padding: 6rem 4rem;
+  text-align: center;
+  background: var(--color-light);
+}
+
+.section-intro h2 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-intro p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  color: #666;
+}
+
+.section-content {
+  padding: 6rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-content.reverse {
+  direction: rtl;
+}
+
+.section-content.reverse .content-text {
+  direction: ltr;
+}
+
+.content-text h3 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.content-text p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #666;
+}
+
+.content-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Menu Section */
+.menu-section {
+  padding: 6rem 0;
+  background: var(--color-light);
+}
+
+.menu-section h2 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 4rem;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+}
+
+.menu-category h3 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--color-green);
+  text-align: center;
+}
+
+.menu-items {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.menu-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item h4 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.menu-item p {
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.price {
+  font-weight: 600;
+  color: var(--color-green);
+  font-size: 1.2rem;
+}
+
+/* Hours Section */
+.hours-section {
+  padding: 6rem 0;
+  background: white;
+}
+
+.hours-section h2 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 4rem;
+}
+
+.hours-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.hours-item {
+  text-align: center;
+  padding: 2rem;
+  background: var(--color-light);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.hours-item h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-green);
+}
+
+.hours-item p {
+  font-size: 1.2rem;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .section-intro {
+    padding: 4rem 2rem;
+  }
+
+  .section-intro h2 {
+    font-size: 2rem;
+  }
+
+  .section-content {
+    padding: 4rem 2rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .section-content.reverse {
+    direction: ltr;
+  }
+
+  .content-text h3 {
+    font-size: 2rem;
+  }
+
+  .menu-section {
+    padding: 4rem 0;
+  }
+
+  .menu-section h2 {
+    font-size: 2rem;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .hours-section {
+    padding: 4rem 0;
+  }
+
+  .hours-section h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-intro {
+    padding: 3rem 1rem;
+  }
+
+  .section-intro h2 {
+    font-size: 1.8rem;
+  }
+
+  .section-content {
+    padding: 3rem 1rem;
+  }
+
+  .content-text h3 {
+    font-size: 1.8rem;
+  }
+
+  .menu-section {
+    padding: 3rem 0;
+  }
+
+  .menu-section h2 {
+    font-size: 1.8rem;
+  }
+
+  .hours-section {
+    padding: 3rem 0;
+  }
+
+  .hours-section h2 {
+    font-size: 1.8rem;
+  }
+}
