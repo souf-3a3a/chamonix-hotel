@@ -34,6 +34,11 @@ const Reserver = () => {
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
   const [dateError, setDateError] = useState('');
+  const [bookingRoom, setBookingRoom] = useState(null);
+  const [bookingForm, setBookingForm] = useState({ customer_name: '', customer_email: '', customer_phone: '', guests: 1, special_requests: '' });
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [bookingError, setBookingError] = useState('');
 
   // Calculate number of nights
   const calculateNights = () => {
@@ -164,15 +169,41 @@ const Reserver = () => {
       alert('Veuillez sélectionner les dates d\'arrivée et de départ');
       return;
     }
-
     const availability = getRoomAvailability(room._id);
     if (!availability.available) {
       alert('Cette chambre n\'est pas disponible pour les dates sélectionnées');
       return;
     }
+    setBookingRoom(room);
+    setBookingForm({ customer_name: '', customer_email: '', customer_phone: '', guests: 1, special_requests: '' });
+    setBookingError('');
+    setBookingSuccess(false);
+  };
 
-    // Here you would typically redirect to booking form or handle booking process
-    alert(`Réservation de ${room.name} du ${checkInDate} au ${checkOutDate}\nPrix total: ${(room.price_per_night * calculateNights()).toFixed(2)} MAD`);
+  const submitBooking = async (e) => {
+    e.preventDefault();
+    setBookingLoading(true);
+    setBookingError('');
+    try {
+      await apiFetch('/reservations', {
+        method: 'POST',
+        body: JSON.stringify({
+          room_id: bookingRoom._id,
+          customer_name: bookingForm.customer_name,
+          customer_email: bookingForm.customer_email,
+          customer_phone: bookingForm.customer_phone,
+          check_in: checkInDate,
+          check_out: checkOutDate,
+          guests: bookingForm.guests,
+          special_requests: bookingForm.special_requests,
+        }),
+      });
+      setBookingSuccess(true);
+    } catch (err) {
+      setBookingError(err.message || 'Erreur lors de la réservation');
+    } finally {
+      setBookingLoading(false);
+    }
   };
 
   // Get room images array
@@ -370,6 +401,40 @@ const Reserver = () => {
   return (
     <div className="reservation">
       <Navbar />
+
+      {/* Booking Form Modal */}
+      {bookingRoom && (
+        <div className="room-modal" style={{ display: 'block' }} onClick={() => setBookingRoom(null)}>
+          <div className="room-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+            <div className="room-modal-header">
+              <h3>Réserver - {bookingRoom.name}</h3>
+              <button className="room-modal-close" onClick={() => setBookingRoom(null)}>&times;</button>
+            </div>
+            <div className="room-modal-body">
+              {bookingSuccess ? (
+                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                  <p style={{ color: 'green', fontSize: '1.2rem' }}>✓ Réservation confirmée !</p>
+                  <p>Vous recevrez une confirmation par email.</p>
+                  <button className="details-btn" onClick={() => setBookingRoom(null)} style={{ marginTop: '1rem' }}>Fermer</button>
+                </div>
+              ) : (
+                <form onSubmit={submitBooking} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                  <p style={{ margin: 0 }}><strong>Du</strong> {checkInDate} <strong>au</strong> {checkOutDate} — {calculateNights()} nuit(s)</p>
+                  <input required placeholder="Nom complet *" value={bookingForm.customer_name} onChange={e => setBookingForm(f => ({ ...f, customer_name: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+                  <input required type="email" placeholder="Email *" value={bookingForm.customer_email} onChange={e => setBookingForm(f => ({ ...f, customer_email: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+                  <input placeholder="Téléphone" value={bookingForm.customer_phone} onChange={e => setBookingForm(f => ({ ...f, customer_phone: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+                  <input type="number" min="1" placeholder="Nombre de personnes" value={bookingForm.guests} onChange={e => setBookingForm(f => ({ ...f, guests: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+                  <textarea placeholder="Demandes spéciales" value={bookingForm.special_requests} onChange={e => setBookingForm(f => ({ ...f, special_requests: e.target.value }))} rows={3} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc', resize: 'vertical' }} />
+                  {bookingError && <p style={{ color: 'red', margin: 0 }}>{bookingError}</p>}
+                  <button type="submit" className="book-btn" disabled={bookingLoading} style={{ marginTop: '0.5rem' }}>
+                    {bookingLoading ? 'En cours...' : `Confirmer — ${(bookingRoom.price_per_night * calculateNights()).toFixed(0)} MAD`}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Hero Section */}
       <section className="hero" id="home">
