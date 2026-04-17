@@ -75,50 +75,72 @@ const Resto = () => {
       {/* Gallery Section */}
       <div className="gallery-section" id="gallery">
         <div className="gallery-grid">
+
+         
           <div className="gallery-item">
-             <div className="gallery-item">
             <img src="/assets/1.jpeg" />
-            <div className="gallery-caption"></div>
+           <div className="gallery-caption"></div>
+           </div>
+
+           
+          
+
              <div className="gallery-item">
             <img src="/assets/2.jpeg" />
             <div className="gallery-caption"></div>
           </div>
-          </div>
+         
+            <div className="gallery-item">
             <img src="/assets/35.jpeg" />
             <div className="gallery-caption"></div>
           </div>
+
+
              <div className="gallery-item">
             <img src="/assets/36.jpeg" />
             <div className="gallery-caption"></div>
           </div>
+          
                    <div className="gallery-item">
             <img src="/assets/6.jpeg" />
             <div className="gallery-caption"></div>
           </div>
+                   
+                   
                    <div className="gallery-item">
             <img src="/assets/4.jpeg" />
             <div className="gallery-caption"></div>
           </div>
+
+
+
                 <div className="gallery-item">
             <img src="/assets/24.jpeg" />
             <div className="gallery-caption"></div>
           </div>
+
+
                 <div className="gallery-item">
             <img src="/assets/13.jpeg" />
             <div className="gallery-caption"></div>
           </div>
+
+
            <div className="gallery-item">
             <img src="/assets/14.jpeg" />
             <div className="gallery-caption"></div>
           </div>
+
            <div className="gallery-item">
             <img src="/assets/18.jpeg" />
             <div className="gallery-caption"></div>
+          
           </div>
-     <div className="gallery-item">
-            <img src="/assets/16.jpeg" />
-            <div className="gallery-caption"></div>
-          </div>
+
+                <div className="gallery-item">
+                        <img src="/assets/16.jpeg" />
+                        <div className="gallery-caption"></div>
+                  </div>
         </div>
       </div>
 
