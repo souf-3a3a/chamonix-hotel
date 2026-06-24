@@ -341,3 +341,47 @@
     font-size: 1.6rem;
   }
 }
+
+
+@media (max-width: 768px) {
+  /* Tighten the menu header */
+  .mobile-menu-header {
+    margin-bottom: 1.5rem;  /* was 3rem */
+    padding-bottom: 1rem;   /* was 2rem */
+  }
+
+  /* Smaller logo inside menu */
+  .mobile-menu-logo img {
+    height: 70px;
+    width: 70px;
+  }
+
+  /* Tighter nav links */
+  .mobile-menu-links li {
+    margin-bottom: 0.8rem;  /* was 1.5rem */
+  }
+
+  .mobile-menu-links a {
+    font-size: 1.3rem;      /* was 1.8rem */
+  }
+
+  /* Tighter info section */
+  .mobile-menu-info {
+    margin-top: 1.5rem;     /* was 3rem */
+    padding-top: 1rem;      /* was 2rem */
+  }
+
+  .mobile-menu-info h4 {
+    margin-bottom: 0.5rem;  /* was 1rem */
+    font-size: 0.95rem;
+  }
+
+  .mobile-menu-info p {
+    font-size: 0.8rem;
+  }
+
+  /* Less top padding on the menu itself */
+  .mobile-menu {
+    padding: 4rem 2rem 2rem;  /* was 6rem 3rem 3rem */
+  }
+}
