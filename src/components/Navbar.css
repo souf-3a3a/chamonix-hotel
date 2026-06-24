@@ -251,14 +251,14 @@
 }
 
 .mobile-menu-links li {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .mobile-menu-links a {
   color: white;
   text-decoration: none;
   font-family: 'Dancing Script', cursive;
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   font-weight: 500;
   transition: opacity 0.3s ease;
 }
