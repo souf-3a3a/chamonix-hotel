@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
 import './Navbar.css';
@@ -6,19 +6,29 @@ import './Navbar.css';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [menuHeight, setMenuHeight] = useState(window.innerHeight);
   const location = useLocation();
   const { t, toggleLang } = useLanguage();
+
+  // Keep menu height in sync with actual visible window height
+  // window.innerHeight is always the real visible area, unlike 100vh
+  useEffect(() => {
+    const updateHeight = () => setMenuHeight(window.innerHeight);
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 100);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const openMobileMenu = () => {
+    // Capture height at the exact moment menu opens
+    setMenuHeight(window.innerHeight);
     setIsMenuOpen(true);
     document.body.style.overflow = 'hidden';
   };
@@ -48,11 +58,14 @@ const Navbar = () => {
       <div
         className={`mobile-menu-overlay ${isMenuOpen ? 'active' : ''}`}
         onClick={closeMobileMenu}
+        style={{ height: menuHeight }}
       ></div>
 
-      {/* Mobile Menu */}
-      <div className={`mobile-menu ${isMenuOpen ? 'active' : ''}`}>
-
+      {/* Mobile Menu — height set via JS to real visible area */}
+      <div
+        className={`mobile-menu ${isMenuOpen ? 'active' : ''}`}
+        style={{ height: menuHeight }}
+      >
         <div className="mobile-menu-header">
           <div className="mobile-menu-logo">
             <img src="/assets/logo.png" alt="Le Chamonix Logo" />
@@ -101,7 +114,6 @@ const Navbar = () => {
             {t.nav.email}
           </p>
         </div>
-
       </div>
 
       {/* Navigation */}
@@ -128,9 +140,7 @@ const Navbar = () => {
           </li>
           <li>
             <a href="#contact" onClick={(e) => {
-              if (location.pathname !== '/') {
-                return;
-              }
+              if (location.pathname !== '/') return;
               e.preventDefault();
               handleLinkClick('#contact');
             }}>
