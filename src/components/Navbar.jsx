@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useLanguage } from '../i18n/LanguageContext.jsx';
 import './Navbar.css';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { t, toggleLang } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,28 +61,41 @@ const Navbar = () => {
         <ul className="mobile-menu-links">
           <li>
             <Link to="/" onClick={() => handleLinkClick('/')}>
-              Home
+              {t.nav.home}
             </Link>
           </li>
           <li>
             <Link to="/rooms" onClick={() => handleLinkClick('/rooms')}>
-              Rooms
+              {t.nav.rooms}
             </Link>
           </li>
           <li>
              <Link to="/resto" onClick={() => handleLinkClick('/resto')}>
-              Bar & Restaurant
+              {t.nav.restaurant}
             </Link>
-       
+
+          </li>
+          <li>
+            <a
+              href="#"
+              className="lang-toggle"
+              onClick={(e) => {
+                e.preventDefault();
+                toggleLang();
+              }}
+              aria-label="Switch language"
+            >
+              {t.langLabel}
+            </a>
           </li>
         </ul>
-        
+
         <div className="mobile-menu-info">
-          <h4>Contact Us</h4>
+          <h4>{t.nav.contactUs}</h4>
           <p>
-            Ifrane, Maroc<br/>
-            Phone: +212 535 862 000<br/>
-            Email: info@lechamonix.ma
+            {t.nav.address}<br/>
+            {t.nav.phone}<br/>
+            {t.nav.email}
           </p>
         </div>
       </div>
@@ -102,10 +117,10 @@ const Navbar = () => {
         
         <ul className="nav-links">
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">{t.nav.home}</Link>
           </li>
           <li>
-            <Link to="/reserver">Réserver</Link>
+            <Link to="/reserver">{t.nav.reserver}</Link>
           </li>
           <li>
             <a href="#contact" onClick={(e) => {
@@ -115,11 +130,21 @@ const Navbar = () => {
               e.preventDefault();
               handleLinkClick('#contact');
             }}>
-              Contact
+              {t.nav.contact}
             </a>
           </li>
           <li>
-            <a href="#contact">FR</a>
+            <a
+              href="#"
+              className="lang-toggle"
+              onClick={(e) => {
+                e.preventDefault();
+                toggleLang();
+              }}
+              aria-label="Switch language"
+            >
+              {t.langLabel}
+            </a>
           </li>
         </ul>
       </nav>

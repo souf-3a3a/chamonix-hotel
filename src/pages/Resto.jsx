@@ -3,10 +3,12 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useLanguage } from '../i18n/LanguageContext.jsx';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Resto = () => {
+  const { t } = useLanguage();
   useEffect(() => {
     // Gallery animations
     gsap.fromTo('.gallery-item', {
@@ -48,23 +50,15 @@ const Resto = () => {
       {/* First Section */}
       <div className="first-section">
         <div className="section-intro">
-          <h2>Saveurs locales, ambiance détendue</h2>
+          <h2>{t.resto.introTitle}</h2>
           <p></p>
         </div>
-        
+
         {/* Single subsection with image and caption */}
         <div className="section-content" id="featured_section">
           <div className="content-text">
-            <h3>Notre Bar et Restaurant</h3>
-            <p>
-              Notre hall d'accueil incarne parfaitement l'esprit du Serenity Hotel : un mélange 
-              harmonieux entre l'architecture traditionnelle marocaine et le confort moderne. 
-              Les détails sculptés à la main, les couleurs pastel chaleureuses et l'éclairage 
-              tamisé créent une atmosphère accueillante qui annonce le début d'une expérience 
-              inoubliable. À quelques pas, notre bar convivial vous invite à savourer un café 
-              parfumé ou un cocktail rafraîchissant, prolongeant ainsi ce moment de détente dès 
-              votre arrivée. Ici commence votre voyage vers la sérénité.
-            </p>
+            <h3>{t.resto.sectionTitle}</h3>
+            <p>{t.resto.sectionText}</p>
           </div>
           <div className="content-image">
             <img src="/assets/como5.jpg" alt="Bar et Restaurant" />

@@ -4,6 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Reserver.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useLanguage } from '../i18n/LanguageContext.jsx';
+import { formatMAD } from '../i18n/translations';
 
 // API Configuration
 const API_BASE = `${import.meta.env.VITE_API_URL}/api`;
@@ -26,6 +28,7 @@ async function apiFetch(path, opts = {}) {
 }
 
 const Reserver = () => {
+  const { t } = useLanguage();
   const [selectedModal, setSelectedModal] = useState(null);
   const [selectedImages, setSelectedImages] = useState({});
   const [rooms, setRooms] = useState([]);
@@ -64,7 +67,7 @@ const Reserver = () => {
       setSelectedImages(initialImages);
     } catch (error) {
       console.error('Failed to load rooms:', error);
-      alert('Failed to load rooms. Please try again.');
+      alert(t.reserver.loadRoomsError);
     } finally {
       setLoading(false);
     }
@@ -78,7 +81,7 @@ const Reserver = () => {
     }
 
     if (new Date(checkInDate) >= new Date(checkOutDate)) {
-      setDateError('Check-in date must be before check-out date');
+      setDateError(t.reserver.dateError);
       setAvailableRooms([]);
       return;
     }
@@ -166,12 +169,12 @@ const Reserver = () => {
 
   const handleBooking = (room) => {
     if (!checkInDate || !checkOutDate) {
-      alert('Veuillez sélectionner les dates d\'arrivée et de départ');
+      alert(t.reserver.selectDatesAlert);
       return;
     }
     const availability = getRoomAvailability(room._id);
     if (!availability.available) {
-      alert('Cette chambre n\'est pas disponible pour les dates sélectionnées');
+      alert(t.reserver.unavailableAlert);
       return;
     }
     setBookingRoom(room);
@@ -200,7 +203,7 @@ const Reserver = () => {
       });
       setBookingSuccess(true);
     } catch (err) {
-      setBookingError(err.message || 'Erreur lors de la réservation');
+      setBookingError(err.message || t.reserver.bookingError);
     } finally {
       setBookingLoading(false);
     }
@@ -226,10 +229,8 @@ const Reserver = () => {
     return images;
   };
 
-  // Format price with currency
-  const formatPrice = (price) => {
-    return `${price.toFixed(0)} MAD`;
-  };
+  // Format price with currency (MAD across the whole site)
+  const formatPrice = (price) => formatMAD(price);
 
   const RoomContainer = ({ room }) => {
     const images = getRoomImages(room);
@@ -250,10 +251,10 @@ const Reserver = () => {
               {/* Availability indicator overlay */}
               <div className={`availability-badge ${availability.available ? 'available' : 'unavailable'}`}>
                 {checkInDate && checkOutDate ? (
-                  availability.available ? 
-                    `✓ Disponible (${availability.count})` : 
-                    '✗ Non disponible'
-                ) : 'Sélectionner les dates'}
+                  availability.available ?
+                    t.reserver.available(availability.count) :
+                    t.reserver.unavailable
+                ) : t.reserver.selectDatesBadge}
               </div>
             </div>
             <div className="room-thumbnails">
@@ -273,31 +274,31 @@ const Reserver = () => {
           <div className="room-info">
             <h3 className="room-title">{room.name}</h3>
             <h4 className="room-subtitle">
-              {room.details?.beds || 'Lit confortable'} • {room.quantity || 1} chambre{room.quantity > 1 ? 's' : ''} disponible{room.quantity > 1 ? 's' : ''}
+              {room.details?.beds || t.reserver.defaultBeds} • {t.reserver.roomsAvailable(room.quantity || 1)}
             </h4>
-            <p className="room-description">{room.description || 'Chambre confortable avec toutes les commodités modernes.'}</p>
+            <p className="room-description">{room.description || t.reserver.defaultDescription}</p>
           </div>
           <div className="room-booking">
             <div className="price-section">
               <div className="total-price">{formatPrice(totalPrice)}</div>
               <div className="price-details">
                 {nights > 0 ? (
-                  `Total pour ${nights} nuit${nights > 1 ? 's' : ''}\n${formatPrice(room.price_per_night)} par nuit`
+                  `${t.reserver.totalFor(nights)}\n${formatPrice(room.price_per_night)} ${t.reserver.perNight}`
                 ) : (
-                  `${formatPrice(room.price_per_night)} par nuit`
+                  `${formatPrice(room.price_per_night)} ${t.reserver.perNight}`
                 )}
               </div>
             </div>
             <div className="booking-buttons">
               <button className="details-btn" onClick={() => openModal(room)}>
-                Plus de détails
+                {t.reserver.moreDetails}
               </button>
-              <button 
+              <button
                 className={`book-btn ${!availability.available && checkInDate && checkOutDate ? 'disabled' : ''}`}
                 onClick={() => handleBooking(room)}
                 disabled={!availability.available && checkInDate && checkOutDate}
               >
-                {!availability.available && checkInDate && checkOutDate ? 'Non disponible' : 'Réserver maintenant'}
+                {!availability.available && checkInDate && checkOutDate ? t.reserver.notAvailable : t.reserver.bookNow}
               </button>
             </div>
           </div>
@@ -330,24 +331,24 @@ const Reserver = () => {
             )}
           </div>
           
-          <h4>Caractéristiques de la chambre</h4>
+          <h4>{t.reserver.roomFeatures}</h4>
           <ul>
-            <li>Prix par nuit: {formatPrice(room.price_per_night || 0)}</li>
-            <li>Chambres disponibles: {room.quantity || 1}</li>
+            <li>{t.reserver.pricePerNight}: {formatPrice(room.price_per_night || 0)}</li>
+            <li>{t.reserver.availableRooms}: {room.quantity || 1}</li>
             {room.details && room.details.beds && (
-              <li>Configuration: {room.details.beds}</li>
+              <li>{t.reserver.configuration}: {room.details.beds}</li>
             )}
             {room.details && room.details.size && (
-              <li>Superficie: {room.details.size}</li>
+              <li>{t.reserver.size}: {room.details.size}</li>
             )}
             {room.details && room.details.view && (
-              <li>Vue: {room.details.view}</li>
+              <li>{t.reserver.view}: {room.details.view}</li>
             )}
           </ul>
-          
+
           {room.details && room.details.amenities && typeof room.details.amenities === 'string' && (
             <>
-              <h4>Équipements</h4>
+              <h4>{t.reserver.equipment}</h4>
               <ul>
                 {room.details.amenities.split(',').map((amenity, index) => (
                   <li key={index}>{amenity.trim()}</li>
@@ -355,20 +356,19 @@ const Reserver = () => {
               </ul>
             </>
           )}
-          
+
           {room.description && (
             <>
-              <h4>Description</h4>
+              <h4>{t.reserver.description}</h4>
               <p>{room.description}</p>
             </>
           )}
-          
-          <h4>Services inclus</h4>
+
+          <h4>{t.reserver.includedServices}</h4>
           <ul>
-            <li>WiFi gratuit</li>
-            <li>Climatisation</li>
-            <li>Service de ménage quotidien</li>
-            <li>Accès aux installations de l'hôtel</li>
+            {t.reserver.includedList.map((service, index) => (
+              <li key={index}>{service}</li>
+            ))}
           </ul>
         </div>
       );
@@ -376,8 +376,8 @@ const Reserver = () => {
       console.error('Error in RoomModal:', error);
       modalContent = (
         <div className="room-modal-body">
-          <h4>Erreur lors du chargement des détails</h4>
-          <p>Impossible de charger les détails de la chambre. Veuillez réessayer.</p>
+          <h4>{t.reserver.detailsErrorTitle}</h4>
+          <p>{t.reserver.detailsErrorText}</p>
         </div>
       );
     }
@@ -386,7 +386,7 @@ const Reserver = () => {
       <div className="room-modal" style={{ display: 'block' }} onClick={onClose}>
         <div className="room-modal-content" onClick={(e) => e.stopPropagation()}>
           <div className="room-modal-header">
-            <h3>{room.name || 'Chambre'} - Détails</h3>
+            <h3>{room.name || t.reserver.defaultRoomName} - {t.reserver.detailsSuffix}</h3>
             <button className="room-modal-close" onClick={onClose}>&times;</button>
           </div>
           {modalContent}
@@ -407,27 +407,27 @@ const Reserver = () => {
         <div className="room-modal" style={{ display: 'block' }} onClick={() => setBookingRoom(null)}>
           <div className="room-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
             <div className="room-modal-header">
-              <h3>Réserver - {bookingRoom.name}</h3>
+              <h3>{t.reserver.bookTitle(bookingRoom.name)}</h3>
               <button className="room-modal-close" onClick={() => setBookingRoom(null)}>&times;</button>
             </div>
             <div className="room-modal-body">
               {bookingSuccess ? (
                 <div style={{ textAlign: 'center', padding: '2rem' }}>
-                  <p style={{ color: 'green', fontSize: '1.2rem' }}>✓ Réservation confirmée !</p>
-                  <p>Vous recevrez une confirmation par email.</p>
-                  <button className="details-btn" onClick={() => setBookingRoom(null)} style={{ marginTop: '1rem' }}>Fermer</button>
+                  <p style={{ color: 'green', fontSize: '1.2rem' }}>{t.reserver.bookingConfirmed}</p>
+                  <p>{t.reserver.bookingConfirmedText}</p>
+                  <button className="details-btn" onClick={() => setBookingRoom(null)} style={{ marginTop: '1rem' }}>{t.reserver.close}</button>
                 </div>
               ) : (
                 <form onSubmit={submitBooking} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                  <p style={{ margin: 0 }}><strong>Du</strong> {checkInDate} <strong>au</strong> {checkOutDate} — {calculateNights()} nuit(s)</p>
-                  <input required placeholder="Nom complet *" value={bookingForm.customer_name} onChange={e => setBookingForm(f => ({ ...f, customer_name: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
-                  <input required type="email" placeholder="Email *" value={bookingForm.customer_email} onChange={e => setBookingForm(f => ({ ...f, customer_email: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
-                  <input placeholder="Téléphone" value={bookingForm.customer_phone} onChange={e => setBookingForm(f => ({ ...f, customer_phone: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
-                  <input type="number" min="1" placeholder="Nombre de personnes" value={bookingForm.guests} onChange={e => setBookingForm(f => ({ ...f, guests: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
-                  <textarea placeholder="Demandes spéciales" value={bookingForm.special_requests} onChange={e => setBookingForm(f => ({ ...f, special_requests: e.target.value }))} rows={3} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc', resize: 'vertical' }} />
+                  <p style={{ margin: 0 }}><strong>{t.reserver.from}</strong> {checkInDate} <strong>{t.reserver.to}</strong> {checkOutDate} — {t.reserver.nightsShort(calculateNights())}</p>
+                  <input required placeholder={t.reserver.fullName} value={bookingForm.customer_name} onChange={e => setBookingForm(f => ({ ...f, customer_name: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+                  <input required type="email" placeholder={t.reserver.emailLabel} value={bookingForm.customer_email} onChange={e => setBookingForm(f => ({ ...f, customer_email: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+                  <input placeholder={t.reserver.phoneLabel} value={bookingForm.customer_phone} onChange={e => setBookingForm(f => ({ ...f, customer_phone: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+                  <input type="number" min="1" placeholder={t.reserver.guests} value={bookingForm.guests} onChange={e => setBookingForm(f => ({ ...f, guests: e.target.value }))} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+                  <textarea placeholder={t.reserver.specialRequests} value={bookingForm.special_requests} onChange={e => setBookingForm(f => ({ ...f, special_requests: e.target.value }))} rows={3} style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc', resize: 'vertical' }} />
                   {bookingError && <p style={{ color: 'red', margin: 0 }}>{bookingError}</p>}
                   <button type="submit" className="book-btn" disabled={bookingLoading} style={{ marginTop: '0.5rem' }}>
-                    {bookingLoading ? 'En cours...' : `Confirmer — ${(bookingRoom.price_per_night * calculateNights()).toFixed(0)} MAD`}
+                    {bookingLoading ? t.reserver.submitting : t.reserver.confirm((bookingRoom.price_per_night * calculateNights()).toFixed(0))}
                   </button>
                 </form>
               )}
@@ -445,7 +445,7 @@ const Reserver = () => {
             padding: '1rem 2rem', 
             borderRadius: '10px'
           }}>
-            Réserver dès maintenant!
+            {t.reserver.heroTitle}
           </h1>
         </div>
       </section>
@@ -460,9 +460,9 @@ const Reserver = () => {
           <h2 style={{ 
             textAlign: 'center', 
             marginBottom: '2rem', 
-            color: '#2F4F4F' 
+            color: '#2F4F4F'
           }}>
-            Sélectionnez vos dates de séjour
+            {t.reserver.selectDates}
           </h2>
           
           <div className="date-inputs" style={{ 
@@ -473,7 +473,7 @@ const Reserver = () => {
             alignItems: 'center'
           }}>
             <div className="date-input-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontWeight: 'bold', color: '#2F4F4F' }}>Date d'arrivée</label>
+              <label style={{ fontWeight: 'bold', color: '#2F4F4F' }}>{t.reserver.checkIn}</label>
               <input
                 type="date"
                 value={checkInDate}
@@ -490,7 +490,7 @@ const Reserver = () => {
             </div>
             
             <div className="date-input-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontWeight: 'bold', color: '#2F4F4F' }}>Date de départ</label>
+              <label style={{ fontWeight: 'bold', color: '#2F4F4F' }}>{t.reserver.checkOut}</label>
               <input
                 type="date"
                 value={checkOutDate}
@@ -515,7 +515,7 @@ const Reserver = () => {
                 textAlign: 'center'
               }}>
                 <strong style={{ color: '#2F4F4F' }}>
-                  {calculateNights()} nuit{calculateNights() > 1 ? 's' : ''}
+                  {t.reserver.nights(calculateNights())}
                 </strong>
               </div>
             )}
@@ -555,16 +555,16 @@ const Reserver = () => {
                 animation: 'spin 1s linear infinite',
                 margin: '0 auto 1rem'
               }}></div>
-              Chargement des chambres...
+              {t.reserver.loadingRooms}
             </div>
           ) : rooms.length === 0 ? (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: '4rem',
               color: '#666'
             }}>
-              <h3>Aucune chambre disponible</h3>
-              <p>Veuillez réessayer plus tard.</p>
+              <h3>{t.reserver.noRoomsTitle}</h3>
+              <p>{t.reserver.noRoomsText}</p>
             </div>
           ) : (
             rooms.map(room => (

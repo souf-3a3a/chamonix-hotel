@@ -154,6 +154,16 @@
   opacity: 0.7;
 }
 
+/* Language toggle */
+.nav-links a.lang-toggle {
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
 /* Mobile Menu */
 .mobile-menu {
   position: fixed;
