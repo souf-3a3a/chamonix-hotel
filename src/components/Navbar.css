@@ -227,6 +227,10 @@
   color: white;
 }
 
+.mobile-menu-logo img {
+  height: 80px;
+  width: auto;
+}
 .mobile-menu-close {
   background: none;
   border: none;
