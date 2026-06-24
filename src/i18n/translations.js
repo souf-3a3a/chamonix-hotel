@@ -4,7 +4,7 @@
 
 export const translations = {
   fr: {
-    langLabel: 'FR',
+    langLabel: 'Français',
 
     nav: {
       home: 'Accueil',
@@ -146,7 +146,7 @@ export const translations = {
   },
 
   en: {
-    langLabel: 'EN',
+    langLabel: 'English',
 
     nav: {
       home: 'Home',
