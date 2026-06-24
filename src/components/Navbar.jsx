@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
 import './Navbar.css';
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,20 +45,23 @@ const Navbar = () => {
   return (
     <>
       {/* Mobile Menu Overlay */}
-      <div 
+      <div
         className={`mobile-menu-overlay ${isMenuOpen ? 'active' : ''}`}
         onClick={closeMobileMenu}
       ></div>
 
       {/* Mobile Menu */}
       <div className={`mobile-menu ${isMenuOpen ? 'active' : ''}`}>
+
         <div className="mobile-menu-header">
-          <div className="mobile-menu-logo"> <img src="/assets/logo.png" alt="Le Chamonix Logo" height="150px" width="150px" /></div>
+          <div className="mobile-menu-logo">
+            <img src="/assets/logo.png" alt="Le Chamonix Logo" />
+          </div>
           <button className="mobile-menu-close" onClick={closeMobileMenu}>
             &times;
           </button>
         </div>
-        
+
         <ul className="mobile-menu-links">
           <li>
             <Link to="/" onClick={() => handleLinkClick('/')}>
@@ -70,10 +74,9 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-             <Link to="/resto" onClick={() => handleLinkClick('/resto')}>
+            <Link to="/resto" onClick={() => handleLinkClick('/resto')}>
               {t.nav.restaurant}
             </Link>
-
           </li>
           <li>
             <a
@@ -93,16 +96,17 @@ const Navbar = () => {
         <div className="mobile-menu-info">
           <h4>{t.nav.contactUs}</h4>
           <p>
-            {t.nav.address}<br/>
-            {t.nav.phone}<br/>
+            {t.nav.address}<br />
+            {t.nav.phone}<br />
             {t.nav.email}
           </p>
         </div>
+
       </div>
 
       {/* Navigation */}
       <nav className={`navbar ${isScrolled ? 'shrink' : ''}`}>
-        <div 
+        <div
           className={`menu-toggle ${isMenuOpen ? 'active' : ''}`}
           onClick={openMobileMenu}
         >
@@ -110,11 +114,11 @@ const Navbar = () => {
           <span></span>
           <span></span>
         </div>
-        
+
         <div className={`logo ${isScrolled ? 'shrink' : ''}`}>
-          <img src="/assets/logo.png" alt="Le Chamonix Logo"/>
+          <img src="/assets/logo.png" alt="Le Chamonix Logo" />
         </div>
-        
+
         <ul className="nav-links">
           <li>
             <Link to="/">{t.nav.home}</Link>
@@ -125,7 +129,7 @@ const Navbar = () => {
           <li>
             <a href="#contact" onClick={(e) => {
               if (location.pathname !== '/') {
-                return; // Let default behavior handle navigation to home page
+                return;
               }
               e.preventDefault();
               handleLinkClick('#contact');
@@ -153,4 +157,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-   
